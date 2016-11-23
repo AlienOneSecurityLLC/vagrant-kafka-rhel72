@@ -11,9 +11,12 @@ Vagrant.configure("2") do |config|
 
   # # Zookeeper & Kafka Instances => 3 Instances Spawned
   (1..3).each do |i|
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 1
+    end
     config.vm.define "zkafka#{i}" do |s|
       s.vm.hostname = "zkafka#{i}"
-      s.vm.customize ["zkafka#{i}", :id, "--memory", 2048]
       s.vm.network "private_network", ip: "10.30.3.#{i+1}", netmask: "255.255.255.0", virtualbox__intnet: "my-network", drop_nat_interface_default_route: true
       s.vm.provision "shell", path: "scripts/zkafka.sh", args:"#{i}", privileged: true
 
@@ -22,6 +25,10 @@ Vagrant.configure("2") do |config|
 
   # Logstash Instance => 1 Instance Spawned
   (1..1).each do |i|
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
     config.vm.define "logstash1" do |s|
       s.vm.define "logstash1"
       s.vm.hostname = "logstash1"
@@ -32,6 +39,10 @@ Vagrant.configure("2") do |config|
 
   # Connector Instance => 1 Instance Spawned
   (1..1).each do |i|
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+    end
     config.vm.define "connector1" do |s|
       s.vm.define "connector1"
       s.vm.hostname = "connector1"
