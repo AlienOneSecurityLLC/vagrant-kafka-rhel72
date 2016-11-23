@@ -48,14 +48,4 @@ echo "Completed installation JDK Version: $JDK_VERSION"
 
 echo "Getting software..."
 wget -O "/opt/ArcSight-7.3.0.7886.0-Connector-Linux64.bin" https://www.dropbox.com/s/zzrumm0q08x20aj/ArcSight-7.3.0.7886.0-Connector-Linux64%20%281%29.bin?dl=0
-yum -y install wget tcpdump lsof bindutils
-#######################
-# CENTOS 6.8 UPDATE
-#######################
-
-#echo "Updating CentOS 7.2..."
-#rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-#yum clean all
-#yum makecache fast
-#yum -y update
-#echo "Completed updating CentOS 7.2..."
+yum -y install wget tcpdump lsof bindutils vim-enhanced

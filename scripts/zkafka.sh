@@ -49,7 +49,7 @@ echo "Completed installation JDK Version: $JDK_VERSION"
 ########################
 
 echo "Installing Zookeeper"
-yum -y install git lsof wget make rpmdevtools bind-utils tcpdump
+yum -y install git lsof wget make rpmdevtools bind-utils tcpdump vim-enhanced
 cd /opt
 git clone https://github.com/AlienOneSecurityLLC/zookeeper-el7-rpm.git
 cd /opt/zookeeper-el7-rpm
@@ -59,7 +59,7 @@ rpm -ivh zookeeper-*.rpm
 echo "Setting unique zookeeper id..."
 touch myid
 str=$(hostname);last_char=${str: -1};cd /var/lib/zookeeper;echo $last_char > myid
-sed -i 's/JVMFLAGS=/JVMFLAGS=\"-Xmx2048m -Djute.maxbuffer=1000000000\"/g' /etc/sysconfig/zookeeper
+sed -i 's/JVMFLAGS=/JVMFLAGS=\"-Xmx512m -Djute.maxbuffer=1000000000\"/g' /etc/sysconfig/zookeeper
 echo "server.1=10.30.3.2:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.2=10.30.3.3:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.3=10.30.3.4:2888:3888" >> /etc/zookeeper/zoo.cfg
@@ -84,10 +84,9 @@ echo "Setting unique kafka broker id..."
 str=$(hostname)
 last_char=${str: -1}
 sed -i "s/broker.id\=0/broker.id=$last_char/g" /etc/kafka/server.properties
-ip_address=$(ifconfig -a enp0s8 | grep 'inet ' | cut -d't' -f2 | awk '{print $1}')
+ip_address=$(ifconfig -a | grep 'inet ' | grep '30.3' | cut -d't' -f2 | awk '{print $1}')
 sed -i "s/\#advertised.listeners=PLAINTEXT\:\/\/your.host.name:9092/advertised.listeners=PLAINTEXT\:\/\/$ip_address:9092/g" /etc/kafka/server.properties
 mkdir -p /opt/kafka-logs-1
-log.dirs=/var/lib/kafka
 sed -i 's/log.dirs\=\/var\/lib\/kafka/log.dirs\=\/opt\/kafka-logs-1/g' /etc/kafka/server.properties
 sed -i 's/\#delete.topic.enable\=true/delete.topic.enable\=true/g' /etc/kafka/server.properties
 sed -i "s/num.partitions\=1/num.partitions\=3/g" /etc/kafka/server.properties
@@ -99,14 +98,3 @@ systemctl start kafka
 sed -i "s/XmlIpcRegSvc    9092\/tcp                \# Xml-Ipc Server Reg/kafka    9092\/tcp                \# Kafka/g" /etc/services
 lsof -i TCP:9092 | grep LISTEN
 echo "Completed installation of Kafka"
-
-
-#######################
-# CENTOS 7.2 UPDATE
-#######################
-
-#echo "Updating CentOS 7.2..."
-#rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-#yum clean all
-#yum -y update
-#echo "Completed updating CentOS 7.2..."
