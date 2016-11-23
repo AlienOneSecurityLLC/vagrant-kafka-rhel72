@@ -60,7 +60,7 @@ echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog
 echo "Logstash plugins installation completed"
 chown -R logstash:logstash /opt/logstash
 /usr/bin/systemctl enable logstash
-/usr/bin/systemctl start logstash 
+/usr/bin/systemctl start logstash
 
 #######################
 # CENTOS 6.8 UPDATE
