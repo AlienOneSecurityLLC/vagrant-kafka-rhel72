@@ -13,6 +13,11 @@
 #==============================================================================
 
 
+echo "Setting up nameservers..."
+cat /dev/null > /etc/resolv.conf
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
 ###########################
 # ORACLE JAVA JDK 8 INSTALL
 ###########################
@@ -38,27 +43,23 @@ echo "Installing JDK Version: $JDK_VERSION"
 rpm -ivh /tmp/$JDK_RPM
 echo "Completed installation JDK Version: $JDK_VERSION"
 
+
 ########################
 # ZOOKEEPER INSTALL
 ########################
 
 echo "Installing Zookeeper"
-yum makecache fast
-yum -y install git lsof
+yum -y install git lsof wget make rpmdevtools bind-utils tcpdump
 cd /opt
-git clone git@github.com:AlienOneSecurityLLC/zookeeper-el7-rpm.git
-cd zookeeper-el7-rpm
-sudo yum install make rpmdevtools
+git clone https://github.com/AlienOneSecurityLLC/zookeeper-el7-rpm.git
+cd /opt/zookeeper-el7-rpm
 make rpm
 cd x86_64
 rpm -ivh zookeeper-*.rpm
 echo "Setting unique zookeeper id..."
 touch myid
-str=$(hostname)
-last_char="${str: -1}"
-cd /opt/zookeeper/data
-echo $last_char > myid
-echo 'JVMFLAGS="-Xmx2048m -Djute.maxbuffer=1000000000"' >> /etc/sysconfig/zookeeper
+str=$(hostname);last_char=${str: -1};cd /var/lib/zookeeper;echo $last_char > myid
+sed -i 's/JVMFLAGS=/JVMFLAGS=\"-Xmx2048m -Djute.maxbuffer=1000000000\"/g' /etc/sysconfig/zookeeper
 echo "server.1=10.30.3.2:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.2=10.30.3.3:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.3=10.30.3.4:2888:3888" >> /etc/zookeeper/zoo.cfg
@@ -75,21 +76,20 @@ echo "Completed installation of Zookeeper"
 cd /opt
 git clone https://github.com/id/kafka-el7-rpm.git
 cd kafka-el7-rpm
-yum makecache fast
 sudo yum install make rpmdevtools
 make rpm
 cd RPMS/x86_64
 rpm -ivh kafka-*.rpm
 echo "Setting unique kafka broker id..."
 str=$(hostname)
-last_char="${str: -1}"
-sed -i "s/broker.id\=0/broker.id\=$last_char/g" /etc/kafka/server.properties
-ip_address=$(ifconfig -a eth1 | grep 'inet addr\:' | cut -d':' -f2 | awk '{print $1}')
-sed -i "s/\#advertised.listeners\=PLAINTEXT\:\/\/your.host.name:9092/advertised.listeners\=PLAINTEXT\:\/\/$ip_address:9092/g" /etc/kafka/server.properties
+last_char=${str: -1}
+sed -i "s/broker.id\=0/broker.id=$last_char/g" /etc/kafka/server.properties
+ip_address=$(ifconfig -a eth0 | grep 'inet ' | cut -d't' -f2 | awk '{print $1}')
+sed -i "s/\#advertised.listeners=PLAINTEXT\:\/\/your.host.name:9092/advertised.listeners=PLAINTEXT\:\/\/$ip_address:9092/g" /etc/kafka/server.properties
 mkdir -p /opt/kafka-logs-1
-sed -i "s/log.dirs\=\/tmp\/kafka-logs/log.dirs\=\/opt\/kafka-logs-1/g" /etc/kafka/server.properties
+sed -i 's/log.dirs\=\/tmp\/kafka-logs/log.dirs\=\/opt\/kafka-logs-1/g' /etc/kafka/server.properties
+sed -i 's/\#delete.topic.enable\=true/delete.topic.enable\=true/g' /etc/kafka/server.properties
 sed -i "s/num.partitions\=1/num.partitions\=3/g" /etc/kafka/server.properties
-sed -i "s/\#delete.topic.enable\=true/delete.topic.enable\=true/g" /etc/kafka/server.properties
 sed -i "s/zookeeper.connect\=localhost\:2181/zookeeper.connect\=localhost\:2181,10.30.3.2\:2181,10.30.3.3\:2181,10.30.3.4\:2181/g" /etc/kafka/server.properties
 /usr/bin/systemctl enable kafka
 chown -R kafka:kafka /opt/kafka-logs-1
@@ -104,8 +104,8 @@ echo "Completed installation of Kafka"
 # CENTOS 7.2 UPDATE
 #######################
 
-echo "Updating CentOS 7.2..."
-rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-yum clean all
-yum -y update
-echo "Completed updating CentOS 7.2..."
+#echo "Updating CentOS 7.2..."
+#rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
+#yum clean all
+#yum -y update
+#echo "Completed updating CentOS 7.2..."

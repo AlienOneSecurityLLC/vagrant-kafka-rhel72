@@ -12,6 +12,11 @@
 #==============================================================================
 
 
+echo "Setting up nameservers..."
+cat /dev/null > /etc/resolv.conf
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
 ###########################
 # ORACLE JAVA JDK 8 INSTALL
 ###########################
@@ -44,7 +49,7 @@ rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 cp /vagrant/config/logstash.repo /etc/yum.repos.d
 mkdir -p /opt/logstash
 cp /vagrant/config/logstash.conf /etc/logstash/conf.d
-yum -y install logstash
+yum -y install logstash wget tcpdump bind-utils lsof git
 echo "Installation logstash completed"
 echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog, logstash-codec-cef, and logstash-codec-avro"
 /opt/logstash/bin/./logstash-plugin install logstash-codec-avro
@@ -65,9 +70,9 @@ chown -R logstash:logstash /opt/logstash
 #######################
 # CENTOS 6.8 UPDATE
 #######################
-echo "Updating CentOS 7.2..."
-rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-yum clean all
-yum makecache fast
-yum -y update
-echo "Completed updating CentOS 7.2..."
+#echo "Updating CentOS 7.2..."
+#rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
+#yum clean all
+#yum makecache fast
+#yum -y update
+#echo "Completed updating CentOS 7.2..."
