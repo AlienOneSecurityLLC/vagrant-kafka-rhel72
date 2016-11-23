@@ -63,6 +63,7 @@ echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog
 /opt/logstash/bin/./logstash-plugin update logstash-input-kafka
 /opt/logstash/bin/./logstash-plugin update logstash-output-kafka
 echo "Logstash plugins installation completed"
+sed -i '$ d' /etc/hosts
 chown -R logstash:logstash /opt/logstash
 /usr/bin/systemctl enable logstash
 /usr/bin/systemctl start logstash

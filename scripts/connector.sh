@@ -37,6 +37,7 @@ echo "Disabling firewalld & selinux..."
 /usr/bin/systemctl disable firewalld.service
 sed -i 's/SELINUX=enforcing/SELINUX=permissive/g ' /etc/sysconfig/selinux
 setenforce permissive
+sed -i '$ d' /etc/hosts
 
 echo "Installing JDK Version: $JDK_VERSION"
 rpm -ivh /tmp/$JDK_RPM

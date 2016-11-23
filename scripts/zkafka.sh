@@ -64,6 +64,7 @@ echo "server.1=10.30.3.2:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.2=10.30.3.3:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.3=10.30.3.4:2888:3888" >> /etc/zookeeper/zoo.cfg
 chown -R zookeeper:zookeeper /opt/zookeeper
+sed -i '$ d' /etc/hosts
 systemctl start zookeeper
 sed -i 's/eforward        2181\/tcp                \# eforward/zookeeper        2181\/tcp                \# zookeeper/g' /etc/services
 lsof -i TCP:2181 | grep LISTEN
