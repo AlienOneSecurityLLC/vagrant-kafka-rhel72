@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     v.memory = 1512
     v.cpus = 1
   end
-  # # Zookeeper & Kafka Instances => 3 Instances Spawned
+  # Zookeeper & Kafka Instances => 3 Instances Spawned
   (1..3).each do |i|
     config.vm.define "zkafka#{i}" do |s|
       s.vm.hostname = "zkafka#{i}"
@@ -28,6 +28,10 @@ Vagrant.configure("2") do |config|
       s.vm.hostname = "logstash1"
       s.vm.network "private_network", ip: "10.30.3.5", netmask: "255.255.255.0"
       s.vm.provision "shell", path: "scripts/logstash.sh", privileged: true
+      s.vm.provider "virtualbox" do |v|
+        v.memory = 2048
+        v.cpus = 1
+      end
     end
   end
 
@@ -38,11 +42,12 @@ Vagrant.configure("2") do |config|
       s.vm.hostname = "connector1"
       s.vm.network "private_network", ip: "10.30.3.6", netmask: "255.255.255.0"
       s.vm.provision "shell", path: "scripts/connector.sh", privileged: true
+      s.vm.provider "virtualbox" do |v|
+        v.memory = 2048
+        v.cpus = 1
+      end
     end
   end
 
 # Global
-  config.vm.provider "virtualbox" do |v|
-    v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
-  end
 end
