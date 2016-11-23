@@ -64,7 +64,7 @@ echo "server.1=10.30.3.2:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.2=10.30.3.3:2888:3888" >> /etc/zookeeper/zoo.cfg
 echo "server.3=10.30.3.4:2888:3888" >> /etc/zookeeper/zoo.cfg
 chown -R zookeeper:zookeeper /opt/zookeeper
-service zookeeper start
+systemctl start zookeeper
 sed -i 's/eforward        2181\/tcp                \# eforward/zookeeper        2181\/tcp                \# zookeeper/g' /etc/services
 lsof -i TCP:2181 | grep LISTEN
 echo "Completed installation of Zookeeper"
@@ -84,17 +84,18 @@ echo "Setting unique kafka broker id..."
 str=$(hostname)
 last_char=${str: -1}
 sed -i "s/broker.id\=0/broker.id=$last_char/g" /etc/kafka/server.properties
-ip_address=$(ifconfig -a eth0 | grep 'inet ' | cut -d't' -f2 | awk '{print $1}')
+ip_address=$(ifconfig -a enp0s8 | grep 'inet ' | cut -d't' -f2 | awk '{print $1}')
 sed -i "s/\#advertised.listeners=PLAINTEXT\:\/\/your.host.name:9092/advertised.listeners=PLAINTEXT\:\/\/$ip_address:9092/g" /etc/kafka/server.properties
 mkdir -p /opt/kafka-logs-1
-sed -i 's/log.dirs\=\/tmp\/kafka-logs/log.dirs\=\/opt\/kafka-logs-1/g' /etc/kafka/server.properties
+log.dirs=/var/lib/kafka
+sed -i 's/log.dirs\=\/var\/lib\/kafka/log.dirs\=\/opt\/kafka-logs-1/g' /etc/kafka/server.properties
 sed -i 's/\#delete.topic.enable\=true/delete.topic.enable\=true/g' /etc/kafka/server.properties
 sed -i "s/num.partitions\=1/num.partitions\=3/g" /etc/kafka/server.properties
 sed -i "s/zookeeper.connect\=localhost\:2181/zookeeper.connect\=localhost\:2181,10.30.3.2\:2181,10.30.3.3\:2181,10.30.3.4\:2181/g" /etc/kafka/server.properties
-/usr/bin/systemctl enable kafka
+systemctl enable kafka
 chown -R kafka:kafka /opt/kafka-logs-1
 chown -R kafka:kafka /opt/kafka
-/usr/bin/systemctl start kafka
+systemctl start kafka
 sed -i "s/XmlIpcRegSvc    9092\/tcp                \# Xml-Ipc Server Reg/kafka    9092\/tcp                \# Kafka/g" /etc/services
 lsof -i TCP:9092 | grep LISTEN
 echo "Completed installation of Kafka"

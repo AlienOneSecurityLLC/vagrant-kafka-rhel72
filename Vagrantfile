@@ -8,12 +8,15 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
 
+
   # # Zookeeper & Kafka Instances => 3 Instances Spawned
   (1..3).each do |i|
     config.vm.define "zkafka#{i}" do |s|
       s.vm.hostname = "zkafka#{i}"
+      s.vm.customize ["zkafka#{i}", :id, "--memory", 2048]
       s.vm.network "private_network", ip: "10.30.3.#{i+1}", netmask: "255.255.255.0", virtualbox__intnet: "my-network", drop_nat_interface_default_route: true
       s.vm.provision "shell", path: "scripts/zkafka.sh", args:"#{i}", privileged: true
+
     end
   end
 
