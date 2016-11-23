@@ -6,14 +6,14 @@
 ###Vagrant Kafka/Zookeeper 
 =============
 ####Vagrant Configuration: 5 VMs Total 
-    + CentOS 6.8 VMs
+    + CentOS 7.2 VMs
     + Three Apache Zookeeper Quorum (Replicated ZooKeeper)
     + Three Apache Kafka Brokers 
     + JDK 8u112
     + Kafka 0.10.1.0 
     + Scala 2.10 
     + Zookeeper 3.4.9 
-    + One Logstash 4.0 Node 
+    + One Logstash 2.4.1 Node 
     + One ArcSight Smart Connector 7.3.0.7886.0 Node 
 
 #####Prerequisites - Install the following prerequisites 
