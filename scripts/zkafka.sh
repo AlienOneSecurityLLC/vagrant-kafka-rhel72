@@ -43,13 +43,18 @@ echo "Installing JDK Version: $JDK_VERSION"
 rpm -ivh /tmp/$JDK_RPM
 echo "Completed installation JDK Version: $JDK_VERSION"
 
+########################
+# IINSTALL EPEL
+########################
+
+rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 ########################
 # ZOOKEEPER INSTALL
 ########################
 
 echo "Installing Zookeeper"
-yum -y install git lsof wget make rpmdevtools bind-utils tcpdump vim-enhanced
+yum -y install git lsof wget make rpmdevtools bind-utils tcpdump vim-enhanced iftop
 cd /opt
 git clone https://github.com/AlienOneSecurityLLC/zookeeper-el7-rpm.git
 cd /opt/zookeeper-el7-rpm

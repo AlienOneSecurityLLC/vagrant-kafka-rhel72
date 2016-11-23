@@ -40,6 +40,12 @@ echo "installing jdk ..."
 
 rpm -ivh /tmp/$JDK_RPM
 
+########################
+# IINSTALL EPEL
+########################
+
+rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
 #######################
 # INSTALL LOGSTASH 2.4
 #######################
@@ -49,7 +55,7 @@ rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 cp /vagrant/config/logstash.repo /etc/yum.repos.d
 mkdir -p /opt/logstash
 cp /vagrant/config/logstash.conf /etc/logstash/conf.d
-yum -y install logstash wget tcpdump bind-utils lsof git vim-enhanced
+yum -y install logstash wget tcpdump bind-utils lsof git vim-enhanced iftop
 echo "Installation logstash completed"
 echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog, logstash-codec-cef, and logstash-codec-avro"
 /opt/logstash/bin/./logstash-plugin install logstash-codec-avro

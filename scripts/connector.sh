@@ -32,6 +32,17 @@ if [ ! -f /tmp/$JDK_RPM ]; then
     "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u112-b15/$JDK_RPM"
 fi
 
+echo "Installing JDK Version: $JDK_VERSION"
+rpm -ivh /tmp/$JDK_RPM
+echo "Completed installation JDK Version: $JDK_VERSION"
+
+
+########################
+# IINSTALL EPEL
+########################
+
+rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
 echo "Disabling firewalld & selinux..."
 /usr/bin/systemctl stop firewalld.service
 /usr/bin/systemctl disable firewalld.service
@@ -39,14 +50,10 @@ sed -i 's/SELINUX=enforcing/SELINUX=permissive/g ' /etc/sysconfig/selinux
 setenforce permissive
 sed -i '$ d' /etc/hosts
 
-echo "Installing JDK Version: $JDK_VERSION"
-rpm -ivh /tmp/$JDK_RPM
-echo "Completed installation JDK Version: $JDK_VERSION"
-
 ########################################################
 # Get ArcSight Linux Smart Connector Installation Binary
 ########################################################
 
 echo "Getting software..."
 wget -O "/opt/ArcSight-7.3.0.7886.0-Connector-Linux64.bin" https://www.dropbox.com/s/zzrumm0q08x20aj/ArcSight-7.3.0.7886.0-Connector-Linux64%20%281%29.bin?dl=0
-yum -y install wget tcpdump lsof bindutils vim-enhanced
+yum -y install wget tcpdump lsof bindutils vim-enhanced iftop
