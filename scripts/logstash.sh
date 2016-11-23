@@ -46,11 +46,16 @@ mkdir -p /opt/logstash
 cp /vagrant/config/logstash.conf /etc/logstash/conf.d
 echo "Installation logstash completed"
 echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog, logstash-codec-cef, and logstash-codec-avro"
-/opt/logstash/bin/./logstash-plugin install logstash-input-kafka
-/opt/logstash/bin/./logstash-plugin install logstash-output-syslog
-/opt/logstash/bin/./logstash-plugin install logstash-codec-cef
 /opt/logstash/bin/./logstash-plugin install logstash-codec-avro
-/opt/logstash/bin/./logstash-plugin update all 
+/opt/logstash/bin/./logstash-plugin install logstash-codec-cef
+/opt/logstash/bin/./logstash-plugin install logstash-output-webhdfs
+/opt/logstash/bin/./logstash-plugin install logstash-output-syslog
+/opt/logstash/bin/./logstash-plugin uninstall logstash-input-kafka
+/opt/logstash/bin/./logstash-plugin uninstall logstash-output-kafka
+/opt/logstash/bin/./logstash-plugin install logstash-input-kafka
+/opt/logstash/bin/./logstash-plugin install logstash-output-kafka
+/opt/logstash/bin/./logstash-plugin update logstash-input-kafka
+/opt/logstash/bin/./logstash-plugin update logstash-output-kafka
 echo "Logstash plugins installation completed"
 chown -R logstash:logstash /opt/logstash
 /sbin/chkconfig logstash on
