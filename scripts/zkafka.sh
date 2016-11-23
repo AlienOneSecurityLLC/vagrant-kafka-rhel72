@@ -43,6 +43,7 @@ echo "Completed installation JDK Version: $JDK_VERSION"
 ########################
 
 echo "Installing Zookeeper"
+yum makecache fast
 yum -y install git lsof
 cd /opt
 git clone git@github.com:AlienOneSecurityLLC/zookeeper-el7-rpm.git
@@ -74,6 +75,7 @@ echo "Completed installation of Zookeeper"
 cd /opt
 git clone https://github.com/id/kafka-el7-rpm.git
 cd kafka-el7-rpm
+yum makecache fast
 sudo yum install make rpmdevtools
 make rpm
 cd RPMS/x86_64

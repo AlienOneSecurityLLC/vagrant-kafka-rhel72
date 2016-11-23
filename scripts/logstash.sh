@@ -44,6 +44,7 @@ rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 cp /vagrant/config/logstash.repo /etc/yum.repos.d
 mkdir -p /opt/logstash
 cp /vagrant/config/logstash.conf /etc/logstash/conf.d
+yum -y install logstash
 echo "Installation logstash completed"
 echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog, logstash-codec-cef, and logstash-codec-avro"
 /opt/logstash/bin/./logstash-plugin install logstash-codec-avro
@@ -58,8 +59,8 @@ echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog
 /opt/logstash/bin/./logstash-plugin update logstash-output-kafka
 echo "Logstash plugins installation completed"
 chown -R logstash:logstash /opt/logstash
-/sbin/chkconfig logstash on
-/sbin/service logstash start
+/usr/bin/systemctl enable logstash
+/usr/bin/systemctl start logstash 
 
 #######################
 # CENTOS 6.8 UPDATE
@@ -67,5 +68,6 @@ chown -R logstash:logstash /opt/logstash
 echo "Updating CentOS 7.2..."
 rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
 yum clean all
+yum makecache fast
 yum -y update
 echo "Completed updating CentOS 7.2..."

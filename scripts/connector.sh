@@ -49,5 +49,6 @@ wget -O "/opt/ArcSight-7.3.0.7886.0-Connector-Linux64.bin" https://www.dropbox.c
 echo "Updating CentOS 7.2..."
 rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
 yum clean all
+yum makecache fast
 yum -y update
 echo "Completed updating CentOS 7.2..."
