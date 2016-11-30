@@ -52,22 +52,22 @@ rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 echo "Installing logstash"
 rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
-cp /vagrant/config/logstash.repo /etc/yum.repos.d
+rpm -ivh https://artifacts.elastic.co/downloads/logstash/logstash-5.0.2.rpm
 mkdir -p /opt/logstash
 cp /vagrant/config/logstash.conf /etc/logstash/conf.d
-yum -y install logstash wget tcpdump bind-utils lsof git vim-enhanced iftop
+yum -y install wget tcpdump bind-utils lsof git vim-enhanced iftop
 echo "Installation logstash completed"
 echo "Installing logstash plugins - logstash-input-kafka, logstash-output-syslog, logstash-codec-cef, and logstash-codec-avro"
-/opt/logstash/bin/./logstash-plugin install logstash-codec-avro
-/opt/logstash/bin/./logstash-plugin install logstash-codec-cef
-/opt/logstash/bin/./logstash-plugin install logstash-output-webhdfs
-/opt/logstash/bin/./logstash-plugin install logstash-output-syslog
-/opt/logstash/bin/./logstash-plugin uninstall logstash-input-kafka
-/opt/logstash/bin/./logstash-plugin uninstall logstash-output-kafka
-/opt/logstash/bin/./logstash-plugin install logstash-input-kafka
-/opt/logstash/bin/./logstash-plugin install logstash-output-kafka
-/opt/logstash/bin/./logstash-plugin update logstash-input-kafka
-/opt/logstash/bin/./logstash-plugin update logstash-output-kafka
+#/opt/logstash/bin/./logstash-plugin install logstash-codec-avro
+#/opt/logstash/bin/./logstash-plugin install logstash-codec-cef
+#/opt/logstash/bin/./logstash-plugin install logstash-output-webhdfs
+#/opt/logstash/bin/./logstash-plugin install logstash-output-syslog
+#/opt/logstash/bin/./logstash-plugin uninstall logstash-input-kafka
+#/opt/logstash/bin/./logstash-plugin uninstall logstash-output-kafka
+#/opt/logstash/bin/./logstash-plugin install logstash-input-kafka
+#/opt/logstash/bin/./logstash-plugin install logstash-output-kafka
+#/opt/logstash/bin/./logstash-plugin update logstash-input-kafka
+#/opt/logstash/bin/./logstash-plugin update logstash-output-kafka
 echo "Logstash plugins installation completed"
 sed -i '$ d' /etc/hosts
 chown -R logstash:logstash /opt/logstash
